@@ -1,0 +1,35 @@
+<mat-paginator #paginator
+               [length]="totalCount$ |async"
+               [pageIndex]="0"
+               [pageSize]="10"
+               [pageSizeOptions]="[1,5, 10, 25, 100]">
+</mat-paginator>
+
+<mat-accordion displayMode="flat" multi class="mat-table">
+  <section matSort class="mat-elevation-z2 mat-header-row">
+    <span class="mat-header-cell" mat-sort-header="dateOccurred">DateOccurred</span>
+    <span class="mat-header-cell" mat-sort-header="type">Type</span>
+    <span class="mat-header-cell" mat-sort-header="category">Category</span>
+    <span class="mat-header-cell" mat-sort-header="subcategory">SubCategory</span>
+    <span class="mat-header-cell" mat-sort-header="value">Value</span>
+  </section>
+
+  <mat-expansion-panel *ngFor="let payment of payments" class="col-1-4">
+    <mat-expansion-panel-header class="mat-row">
+      <span class="mat-cell">{{payment.dateOccurred | date :'dd-MMM-yy hh:mm:ss'}}</span>
+      <span class="mat-cell">{{payment.type}}</span>
+      <span class="mat-cell">{{payment.category}}</span>
+      <span class="mat-cell">{{payment.subcategory}}</span>
+      <span class="mat-cell">{{payment.value}}</span>
+    </mat-expansion-panel-header>
+    <div><pre>{{payment | json}}</pre></div>
+  </mat-expansion-panel>
+
+  <div class="button-row">
+    <button mat-fab color="primary">
+      <mat-icon aria-label="Example icon-button with a heart icon" (click)="openDialog()">add_circle</mat-icon>
+    </button>
+  </div>
+
+</mat-accordion>
+

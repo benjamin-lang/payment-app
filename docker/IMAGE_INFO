@@ -1,0 +1,10 @@
+
+#### image informations ####
+#
+# service-name:   payment-app
+# description:    angular web ui for the payment-service
+# 
+# command:        /opt/app/start.sh
+# 
+# mandatory environment variables:
+# 

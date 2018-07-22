@@ -1,0 +1,38 @@
+<!--https://stackblitz.com/angular/enobjokajka?file=app%2Fdialog-overview-example.ts-->
+<div class="form-container">
+
+  <H1>Register a new payment</H1>
+  <mat-form-field>
+    <input matInput placeholder="Input">
+  </mat-form-field>
+
+  <mat-form-field>
+    <mat-select placeholder="Zahlungsart">
+      <mat-option value="option">Einzahlung</mat-option>
+      <mat-option value="option">Auszahlung</mat-option>
+    </mat-select>
+  </mat-form-field>
+
+  <mat-form-field>
+    <mat-select placeholder="Kategorie">
+      <mat-option value="option">Kinder</mat-option>
+      <mat-option value="option">Sonstiges</mat-option>
+    </mat-select>
+  </mat-form-field>
+
+  <mat-form-field>
+    <mat-select placeholder="Unterkategorie">
+      <mat-option value="option">test</mat-option>
+      <mat-option value="option">zrdz</mat-option>
+    </mat-select>
+  </mat-form-field>
+
+  <mat-form-field>
+    <textarea matInput placeholder="Textarea"></textarea>
+  </mat-form-field>
+</div>
+
+<div mat-dialog-actions>
+  <button mat-button (click)="onNoClick()">Abort</button>
+  <button mat-button [mat-dialog-close]="data.animal" cdkFocusInitial>Save</button>
+</div>
