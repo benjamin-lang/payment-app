@@ -1,9 +1,13 @@
 <mat-paginator #paginator
-               [length]="totalCount$ |async"
+               [length]="totalCount"
                [pageIndex]="0"
                [pageSize]="10"
                [pageSizeOptions]="[1,5, 10, 25, 100]">
 </mat-paginator>
+
+<div class="example-loading-shade" *ngIf="isLoadingResults">
+  <mat-spinner></mat-spinner>
+</div>
 
 <mat-accordion displayMode="flat" multi class="mat-table">
   <section matSort class="mat-elevation-z2 mat-header-row">

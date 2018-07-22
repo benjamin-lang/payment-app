@@ -1,4 +1,4 @@
-import {AfterViewInit, Component, OnInit, ViewChild} from '@angular/core';
+import {AfterContentInit, AfterViewInit, Component, OnInit, ViewChild} from '@angular/core';
 import {PageDto, Payment} from './Payment';
 import {PaymentsService} from './payments.service';
 import {NewPaymentComponent} from '../new-payment/new-payment.component';
@@ -6,6 +6,8 @@ import {MatDialog, MatPaginator, MatSort, PageEvent, Sort} from '@angular/materi
 import {merge, Observable, of} from "rxjs";
 import {fromMatPaginator, fromMatSort, paginateRows, sortRows} from "./datasource-utils";
 import {catchError, map, startWith, switchMap} from "rxjs/operators";
+import {HttpClient} from "@angular/common/http";
+import {log} from "util";
 
 //https://stackblitz.com/edit/table-like-mat-accordion?file=app%2Fapp.component.ts
 //https://stackblitz.com/angular/mxoemeygmlk?file=app%2Ftable-http-example.ts
@@ -15,10 +17,11 @@ import {catchError, map, startWith, switchMap} from "rxjs/operators";
   templateUrl: './payments.component.html',
   styleUrls: ['./payments.component.scss']
 })
-export class PaymentsComponent implements AfterViewInit {
-  pageDto: PageDto;
+export class PaymentsComponent implements AfterContentInit {
+  pageDto: PageDto = null;
   totalCount: number;
   payments: Payment[] = [];
+  isLoadingResults = false;
 
   animal: string;
   name: string;
@@ -29,30 +32,37 @@ export class PaymentsComponent implements AfterViewInit {
   constructor(private paymentsService: PaymentsService, public dialog: MatDialog) {
   }
 
-  // ngOnInit() {
-  //   this.getPayments();
-  //
-  //   const sortEvents$: Observable<Sort> = fromMatSort(this.sort);
-  //   const pageEvents$: Observable<PageEvent> = fromMatPaginator(this.paginator);
-  //
-  //   const rows$ = of(examplePayments);
-  //
-  //   this.totalRows$ = rows$.pipe(map(rows => rows.length));
-  //   this.displayedRows$ = rows$.pipe(sortRows(sortEvents$), paginateRows(pageEvents$));
-  // }
-
-  ngAfterViewInit() {
+  ngAfterContentInit () {
     // If the user changes the sort order, reset back to the first page.
     this.sort.sortChange.subscribe(() => this.paginator.pageIndex = 0);
 
-    this.getPayments();
-  }
+    this.paginator.page.pipe(
+      startWith({}),
+      switchMap(() => {
+        this.isLoadingResults = true;
 
-  getPayments(): void {
-    this.paymentsService.getPayments(this.paginator.pageSize, null).subscribe(pageDto => {
-      this.pageDto = pageDto;
-      this.payments = pageDto.Payments;
-      this.totalCount = pageDto.TotalCount;
+        if (this.pageDto == null)
+          return this.paymentsService.getPayments(this.paginator.pageSize, null);
+
+        return this.paymentsService.getPayments(this.paginator.pageSize, this.pageDto.ContinuationToken);
+      }),
+      map(page => {
+        // Flip flag to show that loading has finished.
+        this.isLoadingResults = false;
+        this.totalCount = page.TotalCount;
+
+        return page;
+      }),
+      catchError(() => {
+        this.isLoadingResults = false;
+        return of(null);
+      })
+    ).subscribe(page => {
+      this.payments = page.Payments;
+      this.totalCount = page.TotalCount;
+      this.pageDto = page
+
+      console.log(this.pageDto)
     });
   }
 
@@ -69,23 +79,3 @@ export class PaymentsComponent implements AfterViewInit {
   }
 }
 
-export const examplePayments: Payment[] = [
-  {
-    "id": "ff54b32d-606d-4529-b707-c863c69776a1",
-    "dateOccurred": new Date('December 17, 1995 03:24:00'),
-    "type": "DEBT",
-    "category": "GROCERY",
-    "subcategory": "Lebensmittel",
-    "value": 1460,
-    "note": "Aldi"
-  },
-  {
-    "id": "d4a4c602-e65c-4ccd-8217-6c74c3e9eb40",
-    "dateOccurred": new Date('December 18, 1995 03:24:00'),
-    "type": "DEBT",
-    "category": "GROCERY",
-    "subcategory": "Lebensmittel",
-    "value": 4801,
-    "note": "aldi"
-  }
-];

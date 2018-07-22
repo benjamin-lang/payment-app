@@ -11,8 +11,8 @@ export class Payment {
 }
 
 export class ContinuationToken {
-  timestamp: Time;
-  id: string;
+  Timestamp: Time;
+  Id: string;
 }
 
 export class PageDto {

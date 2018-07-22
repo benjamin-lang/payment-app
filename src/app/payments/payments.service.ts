@@ -1,7 +1,7 @@
 import {Injectable} from '@angular/core';
 import {HttpClient} from '@angular/common/http'
 import {Observable, of} from 'rxjs';
-import {PageDto} from './Payment';
+import {ContinuationToken, PageDto} from './Payment';
 import {catchError, tap} from 'rxjs/internal/operators';
 import {MessageService} from './message.service';
 
@@ -15,13 +15,18 @@ export class PaymentsService {
     private messageService: MessageService) {
   }
 
-  getPayments(pageSize: number, continuationToken: string): Observable<PageDto> {
+  getPayments(pageSize: number, continuationToken: ContinuationToken): Observable<PageDto> {
     const href = 'http://localhost:8080/v1/api/payments';
-    const requestUrl = `${href}?pageSize=${pageSize}&continuationToken=${continuationToken}`;
-    return this.http.get<PageDto>(requestUrl).pipe(tap(payments => this.log('payments fetched'))
-      , catchError(this.handleError('getPayments', null)));
+    const requestUrl = `${href}?pageSize=${pageSize}&continuationToken=${this.toString(continuationToken)}`;
+    return this.http.get<PageDto>(requestUrl);
   }
 
+  private toString(continuationToken: ContinuationToken) {
+    if (null == continuationToken)
+      return null;
+
+    return encodeURIComponent(continuationToken.Id + "_" + continuationToken.Timestamp);
+  }
   /**
    * Handle Http operation that failed.
    * Let the app continue.

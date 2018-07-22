@@ -6,8 +6,24 @@ import { AppComponent } from './app.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { LayoutModule } from '@angular/cdk/layout';
 import {
-  MatToolbarModule, MatButtonModule, MatSidenavModule, MatIconModule, MatListModule, MatGridListModule, MatCardModule
-  , MatMenuModule, MatInputModule, MatOptionModule, MatSelectModule, MatExpansionModule, MatDialog, MatDialogModule, MatPaginatorModule, MatSortModule
+  MatToolbarModule,
+  MatButtonModule,
+  MatSidenavModule,
+  MatIconModule,
+  MatListModule,
+  MatGridListModule,
+  MatCardModule
+  ,
+  MatMenuModule,
+  MatInputModule,
+  MatOptionModule,
+  MatSelectModule,
+  MatExpansionModule,
+  MatDialog,
+  MatDialogModule,
+  MatPaginatorModule,
+  MatSortModule,
+  MatProgressSpinnerModule
 } from '@angular/material';
 import { NavComponent } from './nav/nav.component';
 import { PaymentsComponent } from './payments/payments.component';
@@ -45,7 +61,8 @@ import {FormsModule} from '@angular/forms';
     MatExpansionModule,
     MatDialogModule,
     MatPaginatorModule,
-    MatSortModule
+    MatSortModule,
+    MatProgressSpinnerModule
   ],
   providers: [MatDialog],
   bootstrap: [AppComponent]
